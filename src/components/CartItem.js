@@ -2,23 +2,41 @@ import React from 'react';
 import styled from "styled-components";
 import { FaTrashAlt } from "react-icons/fa";
 import { useCartContext } from '../context/cart_context';
-
+import axios from 'axios';
+import { Link } from "react-router-dom";
+import  { useEffect, useState } from 'react';
 
 
 const CartItem = ({ cartItem }) => {
-  const { removeFromCart } = useCartContext();
 
+  const [course, setCourse] = useState({});
+
+  const { removeFromCart } = useCartContext();
+ useEffect(() => {
+    const fetchSingleCourse = async () => {
+      try {
+        console.log(11111)
+        const response = await axios.get(`http://localhost:8100//books/${cartItem.id}/status`);
+        console(22222)
+        setCourse(response.data); // Set course data to state
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching the course:', error);
+      }
+    };
+    fetchSingleCourse();
+  }, []);
 
 
 
   return (
     <CartItemWrapper className='grid'>
       <div className='cart-item-img'>
-        <img src={cartItem.image} alt={cartItem.course_name} />
+        <img src={cartItem.img} alt={cartItem.name} />
       </div>
       <div className='cart-item-info'>
-        <p className='fw-7 fs-15'>{cartItem.course_name}</p>
-        <span className='cart-item-creator fs-13 opacity-09'>By {cartItem.creator}</span><br></br>
+        <p className='fw-7 fs-15'>{cartItem.name}</p>
+        <span className='cart-item-creator fs-13 opacity-09'>By {cartItem.author}</span><br></br>
         
         <br />
         <button type="button" className='remove-btn fs-13 text-dark fw-6' onClick={() => removeFromCart(cartItem.courseID)}>RETURN BOOK </button>

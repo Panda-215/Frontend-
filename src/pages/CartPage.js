@@ -2,15 +2,15 @@ import React from 'react';
 import { useCartContext } from '../context/cart_context';
 import styled from "styled-components";
 import CartItem from "../components/CartItem";
-import {MdClear} from "react-icons/md";
+import { MdClear } from "react-icons/md";
 
 const CartPage = () => {
-  const {cart: cartItems, total_items, total_amount, clearCart} = useCartContext();
+  const { cart: cartItems, total_items, total_amount, clearCart } = useCartContext();
 
-  if(cartItems.length < 1){
+  if (cartItems.length < 1) {
     return (
       <NotFoundWrapper>
-        <div className='container'>Please add libary line tel.08449435 or contact at counter.</div>
+        <div className='container'>Please add books or contact at counter.</div>
       </NotFoundWrapper>
     )
   }
@@ -22,13 +22,13 @@ const CartPage = () => {
           <h3>Your book Cart</h3>
         </div>
         <div className='cart-grid grid'>
-          {/* card grid left */}
+          {/* cart grid left */}
           <div className='cart-grid-left'>
             <div className='flex flex-wrap flex-between'>
               <div className='cart-count-info'>
                 <span className='fw-7 fs-18'>{total_items}</span> Book in Cart
               </div>
-              <button type = "button" className='cart-clear-btn flex fs-15 fw-6 text' onClick={() => clearCart()}>
+              <button type="button" className='cart-clear-btn flex fs-15 fw-6 text' onClick={() => clearCart()}>
                 {/* <MdClear className='text-pink' /> */}
                 <span className='d-inline-block text-pink'>Contact Admin</span>
               </button>
@@ -36,23 +36,20 @@ const CartPage = () => {
 
             <div className='cart-items-list grid'>
               {
-                cartItems.map(cartItem => {
-                  return (
-                    <CartItem key = {cartItem.courseID} cartItem = {cartItem} />
-                  )
-                })
+                cartItems.map((cartItem, index) => (
+                  <CartItem key={cartItem.id || index} cartItem={cartItem} />
+                ))
               }
             </div>
           </div>
-          {/* end of grid left */}
-          {/* cart grid right */}
-          {/* <div className='cart-grid-right'>
+
+          <div className='cart-grid-right'>
             <div className='cart-total'>
               <span className='d-block fs-18 fw-6'>Total:</span>
               <div className='cart-total-value fw-8'>${total_amount.toFixed(2)}</div>
-              <button type = "button" className='checkout-btn bg-purple text-white fw-6'>Checkout</button>
+              <button type="button" className='checkout-btn bg-purple text-white fw-6'>Checkout</button>
             </div>
-          </div> */}
+          </div>
           {/* end of cart grid right */}
         </div>
       </div>
@@ -104,10 +101,10 @@ const CartWrapper = styled.div`
     }
 
     @media screen and (min-width: 992px){
-      grid-template-columns: 70% 30%;;
+      grid-template-columns: 70% 30%;
       column-gap: 32px;
     }
   }
 `;
 
-export default CartPage
+export default CartPage;

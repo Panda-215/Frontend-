@@ -1,108 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { useCoursesContext } from '../context/courses_context';
-import StarRating from '../components/StarRating';
-import { MdInfo } from "react-icons/md";
-import { TbWorld } from "react-icons/tb";
 import { FaShoppingCart } from "react-icons/fa";
-import { RiClosedCaptioningFill } from "react-icons/ri";
-import { BiCheck } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { useCartContext } from '../context/cart_context';
-
-import axios from 'axios';  // Import axios
-
-
+import axios from 'axios';
 
 const SingleCoursePage = () => {
-  const { id } = useParams();
-  const { fetchSingleCourse, single_course } = useCoursesContext();
+  const { id } = useParams(); // Correct use of "id" to match the URL param
   const { addToCart } = useCartContext();
+  const [course, setCourse] = useState({});
+  const [reviews, setReviews] = useState([]);
 
+  // Fetch course details based on the ID
   useEffect(() => {
-    fetchSingleCourse(id);
+    const fetchSingleCourse = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8100/books/${id}`);
+        setCourse(response.data); // Set course data to state
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching the course:', error);
+      }
+    };
+    fetchSingleCourse();
+  }, [id]);
 
-  }, []);
-
-  
-  const { id: courseID, category, image, course_name, description, rating_count, rating_star, students, creator, updated_date, lang, actual_price, discounted_price, content } = single_course;
-
-
-  //This is a Reviews part
-  const [reviews, setReviews] = useState([]); // State for storing reviews
+  // Fetch reviews
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get('http://localhost:8100/reviews');
-        setReviews(response.data); // Store fetched reviews in state
+        setReviews(response.data);
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
     };
-
     fetchReviews();
   }, []);
 
-  // const [books, setBooks] = useState([]);
-  // useEffect(() => {
-  //   const fetchBooks = async () => {
-  //     try{
-  //       const response = await axios.get('http://localhost:8100/books');
-  //     }
-  //   }
-  // });
-
-
+  const { name, author, outline, img } = course;
 
   return (
     <SingleCourseWrapper>
       <div className='course-intro mx-auto grid'>
         <div className='course-img'>
-          <img src={image} alt={course_name} />
+          <img src={img} alt={name} />
         </div>
         <div className='course-details'>
-          <div className='course-category bg-white text-dark text-capitalize fw-6 fs-12 d-inline-block'>{category}</div>
+          <div className='course-category bg-white text-dark text-capitalize fw-6 fs-12 d-inline-block'>{author}</div>
           <div className='course-head'>
-            <h5>{course_name}</h5>
+            <h5>{name}</h5>
           </div>
           <div className='course-body'>
-            <p className='course-para fs-18'>{description}</p>
-            <div className='course-rating flex'>
-              <span className='rating-star-val fw-8 fs-16'>{rating_star}</span>
-              <StarRating rating_star={rating_star} />
-              <span className='rating-count fw-5 fs-14'>({rating_count})</span>
-              <span className='students-count fs-14'>{students}</span>
-            </div>
-
-            <ul className='course-info'>
-              <li>
-                <span className='fs-14'>Created by <span className='fw-6 opacity-08'>{creator}</span></span>
-              </li>
-              <li className='flex'>
-                <span><MdInfo /></span>
-                <span className='fs-14 course-info-txt fw-5'>Last updated {updated_date}</span>
-              </li>
-              <li className='flex'>
-                <span><TbWorld /></span>
-                <span className='fs-14 course-info-txt fw-5'>{lang}</span>
-              </li>
-              <li className='flex'>
-                <span><RiClosedCaptioningFill /></span>
-                <span className='fs-14 course-info-txt fw-5'>{lang} [Auto]</span>
-              </li>
-            </ul>
+            <p className='course-para fs-18'>{outline}</p>
           </div>
-
-          <div className='course-foot'>
-            <div className='course-price'>
-              <span className='new-price fs-26 fw-8'>${discounted_price}</span>
-              <span className='old-price fs-26 fw-6'>${actual_price}</span>
-            </div>
-          </div>
-
           <div className='course-btn'>
-            <Link to="/cart" className='add-to-cart-btn d-inline-block fw-7 bg-purple' onClick={() => addToCart(courseID, image, course_name, creator, discounted_price, category)}>
+            <Link to="/cart" className='add-to-cart-btn d-inline-block fw-7 bg-purple' onClick={() => addToCart(id, name, author, outline, img)}>
               <FaShoppingCart /> Add to cart
             </Link>
           </div>
@@ -110,7 +65,6 @@ const SingleCoursePage = () => {
       </div>
 
       <div className='course-full bg-white text-dark'>
-
         <div className='course-content mx-auto'>
           <div className='course-sc-title'>All Reviews</div>
           <ul className='course-content-list'>
@@ -121,7 +75,7 @@ const SingleCoursePage = () => {
                     <div>
                       <span>Customer: {review.customer.name}</span><br />
                       <span>Book: {review.book.name}</span><br />
-                      <span>Date: {review.reviewDate}</span><nr />
+                      <span>Date: {review.reviewDate}</span><br />
                       <span>Comment: {review.comment}</span><br />
                     </div>
                   </li>
@@ -136,28 +90,21 @@ const SingleCoursePage = () => {
         <div className='course-content mx-auto'>
           <div className='course-sc-title'>Write Reviews</div>
           <ul className='course-content-list'>
-            <from className='write'>
-              <input type='text' placeholder='write your comment.' className='comment mx-auto'></input><br />
-              <button type='submit' className='writeDone'>send</button>
-            </from>
+            <form className='write'>
+              <input type='text' placeholder='Write your comment.' className='comment mx-auto' /><br />
+              <button type='submit' className='writeDone'>Send</button>
+            </form>
           </ul>
-
         </div>
-
       </div>
     </SingleCourseWrapper>
-  )
+  );
 }
 
 const SingleCourseWrapper = styled.div`
   background: var(--clr-dark);
   color: var(--clr-white);
 
-  .comment{
-    border: 5px;
-    width 100%: 
-    height: 250px;
-  }
   .course-intro{
     padding: 40px 16px;
     max-width: 992px;

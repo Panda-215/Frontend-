@@ -1,38 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {Link} from "react-router-dom";
-import StarRating from "../components/StarRating";
+import axios from 'axios';
+import { Link } from "react-router-dom";
 import { useCartContext } from '../context/cart_context';
 
-const Course = (props) => {
-  const {id, image, course_name, creator, actual_price, discounted_price, rating_count, rating_star, category} = props;
-  const {addToCart} = useCartContext();
+const Course = () => {
+  const [courses, setCourses] = useState([]); 
+  const { addToCart } = useCartContext();
+  // ฟังก์ชันเพื่อดึงข้อมูลคอร์สจาก API
+  const fetchCourses = async () => {
+    try {
 
+      const response = await axios.get('http://localhost:8100/books'); 
+      setCourses(response.data); 
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
+
+  // ดึงข้อมูลเมื่อ component ถูกโหลด
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  // แสดงผล Loading ขณะข้อมูลยังไม่ถูกดึง
+  if (courses.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  // แสดงผลข้อมูลที่ได้รับจาก API
   return (
-    <CourseCard>
-      <div className='item-img'>
-        <img src = {image} alt = {course_name} />
-      </div>
-      <div className='item-body'>
-        <h5 className='item-name'>{course_name}</h5>
-        <span className='item-creator'>{creator}</span>
-        <div className='item-rating flex'>
-          <span className='rating-star-val'>{rating_star}</span>
-          <StarRating rating_star = {rating_star} />
-          <span className='rating-count'>({rating_count})</span>
-        </div>
-        <div className='item-price'>
-          <span className='item-price-new'>${discounted_price}</span>
-          <span className='item-price-old'>${actual_price}</span>
-        </div>
-      </div>
-      <div className='item-btns flex'>
-        <Link to = {`/courses/${id}`} className = "item-btn see-details-btn">See details</Link>
-        <Link to = "/cart" className='item-btn add-to-cart-btn' onClick={() => addToCart(id, image, course_name, creator, discounted_price, category)}>Add to cart</Link>
-      </div>
-    </CourseCard>
-  )
-}
+    <div>
+      {courses.map((course) => {
+        const { id, name, author, outline,img } = course; // ดึงข้อมูลแต่ละอันจาก API
+        return (
+          <CourseCard key={id}>
+            <div className='item-img'>
+              <img src={img} alt='' />
+            </div>
+            <div className='item-body'>
+            <h5 className='item-name'>{name}</h5>
+              <span className='item-creator'>Author : {author}</span>
+           {/*  <p className='item-outline'>{outline}</p> */}
+              <div className='item-btns flex'>
+                <Link to={`/courses/${id}`} className="item-btn see-details-btn">See details</Link>
+                <Link to="/cart" className='item-btn add-to-cart-btn' onClick={() => addToCart(id, name, author, outline, img)}>Add to cart</Link>
+              </div>
+
+            </div>
+          </CourseCard>
+        );
+      })}
+    </div>
+  );
+
+  
+};
 
 const CourseCard = styled.div`
   margin-bottom: 20px;
@@ -54,33 +78,8 @@ const CourseCard = styled.div`
       font-weight: 500;
       color: rgba(0, 0, 0, 0.6);
     }
-    .rating-star-val{
-      margin-bottom: 5px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #b4690e;
-      margin-right: 6px;
-    }
-    .rating-count{
-      font-size: 12.5px;
-      margin-left: 3px;
-      font-weight: 500;
-      opacity: 0.8;
-    }
-    .item-price-new{
-      font-weight: 700;
-      font-size: 15px;
-    }
-    .item-price-old{
-      opacity: 0.8;
-      font-weight: 500;
-      text-decoration: line-through;
-      font-size: 15px;
-      margin-left: 8px;
-    }
-  }
 
-  .item-btns{
+    .item-btns{
     justify-self: flex-start;
     padding: 4px 8px 30px 18px;
     margin-top: auto;
@@ -116,5 +115,6 @@ const CourseCard = styled.div`
     }
   }
 `;
+  
 
-export default Course
+export default Course;
