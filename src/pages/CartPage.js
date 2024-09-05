@@ -10,7 +10,7 @@ const CartPage = () => {
   if(cartItems.length < 1){
     return (
       <NotFoundWrapper>
-        <div className='container'>No items found in the cart.</div>
+        <div className='container'>Please add libary line tel.08449435 or contact at counter.</div>
       </NotFoundWrapper>
     )
   }
@@ -19,18 +19,18 @@ const CartPage = () => {
     <CartWrapper>
       <div className='container'>
         <div className='cart-pg-title'>
-          <h3>Shopping Cart</h3>
+          <h3>Your book Cart</h3>
         </div>
         <div className='cart-grid grid'>
           {/* card grid left */}
           <div className='cart-grid-left'>
             <div className='flex flex-wrap flex-between'>
               <div className='cart-count-info'>
-                <span className='fw-7 fs-18'>{total_items}</span> Course in Cart
+                <span className='fw-7 fs-18'>{total_items}</span> Book in Cart
               </div>
               <button type = "button" className='cart-clear-btn flex fs-15 fw-6 text' onClick={() => clearCart()}>
-                <MdClear className='text-pink' />
-                <span className='d-inline-block text-pink'>Clear All</span>
+                {/* <MdClear className='text-pink' /> */}
+                <span className='d-inline-block text-pink'>Contact Admin</span>
               </button>
             </div>
 
@@ -46,13 +46,13 @@ const CartPage = () => {
           </div>
           {/* end of grid left */}
           {/* cart grid right */}
-          <div className='cart-grid-right'>
+          {/* <div className='cart-grid-right'>
             <div className='cart-total'>
               <span className='d-block fs-18 fw-6'>Total:</span>
               <div className='cart-total-value fw-8'>${total_amount.toFixed(2)}</div>
               <button type = "button" className='checkout-btn bg-purple text-white fw-6'>Checkout</button>
             </div>
-          </div>
+          </div> */}
           {/* end of cart grid right */}
         </div>
       </div>

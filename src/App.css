@@ -161,7 +161,7 @@ input, textarea, select{
 .text-orange{color: var(--clr-orange);}
 .text-dark{color: var(--clr-dark);}
 .text-purple{color: var(--clr-purple);}
-.text-pink{color: var(--clr-pink);}
+.text-pink{color: var(--clr-orange);}
 .text-alice-blue{color: var(--clr-alice-blue);}
 
 /* font weights */

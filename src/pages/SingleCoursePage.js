@@ -25,9 +25,12 @@ const SingleCoursePage = () => {
 
   }, []);
 
-  const [reviews, setReviews] = useState([]); // State for storing reviews
+  
   const { id: courseID, category, image, course_name, description, rating_count, rating_star, students, creator, updated_date, lang, actual_price, discounted_price, content } = single_course;
 
+
+  //This is a Reviews part
+  const [reviews, setReviews] = useState([]); // State for storing reviews
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -40,6 +43,15 @@ const SingleCoursePage = () => {
 
     fetchReviews();
   }, []);
+
+  // const [books, setBooks] = useState([]);
+  // useEffect(() => {
+  //   const fetchBooks = async () => {
+  //     try{
+  //       const response = await axios.get('http://localhost:8100/books');
+  //     }
+  //   }
+  // });
 
 
 
@@ -100,7 +112,7 @@ const SingleCoursePage = () => {
       <div className='course-full bg-white text-dark'>
 
         <div className='course-content mx-auto'>
-          <div className='course-sc-title'>Reviews</div>
+          <div className='course-sc-title'>All Reviews</div>
           <ul className='course-content-list'>
             {
               reviews.length > 0 ? (
@@ -109,7 +121,7 @@ const SingleCoursePage = () => {
                     <div>
                       <span>Customer: {review.customer.name}</span><br />
                       <span>Book: {review.book.name}</span><br />
-                      <span>Date: {review.reviewDate}</span><br />
+                      <span>Date: {review.reviewDate}</span><nr />
                       <span>Comment: {review.comment}</span><br />
                     </div>
                   </li>
@@ -120,6 +132,18 @@ const SingleCoursePage = () => {
             }
           </ul>
         </div>
+
+        <div className='course-content mx-auto'>
+          <div className='course-sc-title'>Write Reviews</div>
+          <ul className='course-content-list'>
+            <from className='write'>
+              <input type='text' placeholder='write your comment.' className='comment mx-auto'></input><br />
+              <button type='submit' className='writeDone'>send</button>
+            </from>
+          </ul>
+
+        </div>
+
       </div>
     </SingleCourseWrapper>
   )
@@ -129,6 +153,11 @@ const SingleCourseWrapper = styled.div`
   background: var(--clr-dark);
   color: var(--clr-white);
 
+  .comment{
+    border: 5px;
+    width 100%: 
+    height: 250px;
+  }
   .course-intro{
     padding: 40px 16px;
     max-width: 992px;

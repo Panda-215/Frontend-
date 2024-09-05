@@ -1,4 +1,5 @@
-import React, {useEffect, useContext, useReducer} from "react";
+import React, { useEffect, useContext, useReducer } from "react";
+import swal from 'sweetalert';  // Import SweetAlert
 import reducer from "../reducers/cart_reducer";
 import {
     ADD_TO_CART,
@@ -9,7 +10,7 @@ import {
 
 const loadCartFromStorage = () => {
     let cart = localStorage.getItem('cart');
-    if(cart){
+    if (cart) {
         return JSON.parse(localStorage.getItem('cart'));
     } else {
         return [];
@@ -24,30 +25,41 @@ const initialState = {
 
 const CartContext = React.createContext();
 
-export const CartProvider = ({children}) => {
+export const CartProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const addToCart = (courseID, image, course_name, creator, discounted_price, category) => {
-        dispatch({type: ADD_TO_CART, payload: {
-            courseID, image, course_name, creator, discounted_price, category
-        }});
+        dispatch({
+            type: ADD_TO_CART, payload: {
+                courseID, image, course_name, creator, discounted_price, category
+            }
+        });
     }
 
     const removeFromCart = (id) => {
-        dispatch({type: REMOVE_CART_ITEM, payload: id});
+        if (window.confirm("Are you sure you want to return this book?")) {
+            dispatch({ type: REMOVE_CART_ITEM, payload: id });
+            checkIcon();
+        }
+        
     }
 
+    const checkIcon = () => {
+        swal("Congrats!", ", Your account is created!", "success");
+      };
+
+
     const clearCart = () => {
-        dispatch({type: CLEAR_CART})
+        dispatch({ type: CLEAR_CART })
     }
 
     useEffect(() => {
-        dispatch({type: GET_CART_TOTAL});
+        dispatch({ type: GET_CART_TOTAL });
         localStorage.setItem('cart', JSON.stringify(state.cart))
     }, [state.cart]);
 
     return (
-        <CartContext.Provider value = {{
+        <CartContext.Provider value={{
             ...state,
             addToCart,
             removeFromCart,
