@@ -15,7 +15,7 @@ const Sidebar = () => {
         <MdClose />
       </button>
       <div className='sidebar-content'>
-        <h6 className='fs-18'>Top Categories</h6>
+        <h6 className='fs-18'>Genre</h6>
         <ul className='sidebar-category'>
           {
             categories.map((category, idx) => {

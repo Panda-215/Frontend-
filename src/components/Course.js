@@ -45,7 +45,7 @@ const Course = () => {
            {/*  <p className='item-outline'>{outline}</p> */}
               <div className='item-btns flex'>
                 <Link to={`/courses/${id}`} className="item-btn see-details-btn">See details</Link>
-                <Link to="/cart" className='item-btn add-to-cart-btn' onClick={() => addToCart(id, name, author, outline, img)}>Add to cart</Link>
+                <Link to="/cart" className='item-btn add-to-cart-btn' onClick={() => addToCart(id, name, author, outline, img)}>Borrow</Link>
               </div>
 
             </div>

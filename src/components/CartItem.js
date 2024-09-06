@@ -39,7 +39,7 @@ const CartItem = ({ cartItem }) => {
         <span className='cart-item-creator fs-13 opacity-09'>By {cartItem.author}</span><br></br>
         
         <br />
-        <button type="button" className='remove-btn fs-13 text-dark fw-6' onClick={() => removeFromCart(cartItem.courseID)}>RETURN BOOK </button>
+        <button type="button" className='remove-btn fs-13 text-dark fw-6' onClick={() => removeFromCart(cartItem.id)}>RETURN BOOK </button>
 
       </div>
     </CartItemWrapper>

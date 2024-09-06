@@ -45,7 +45,7 @@ export const CartProvider = ({ children }) => {
     }
 
     const checkIcon = () => {
-        swal("Congrats!", ", Your account is created!", "success");
+        swal("Congrats!", ", Your book aready returned!", "success");
       };
 
 
